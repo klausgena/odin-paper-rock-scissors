@@ -88,8 +88,11 @@ function GUIShowRoundResult (roundResult) {
 }
 
 
-function GUIShowScore (wins, losses) {
-    const scoreString = showScore(wins, losses);
+function GUIShowScore (wins, losses, text) {
+    let scoreString = showScore(wins, losses);
+    if (text) {
+        scoreString = text + " " + scoreString;
+    }
     const scoreH2 = document.createElement("H2");
     scoreH2.textContent = scoreString;
     scoreH2.setAttribute("id", "currentScore");
@@ -120,11 +123,9 @@ function GUIPlayGame (rounds) {
             // TODO gui
             GUIShowScore(wins, losses);
             round++;
-            console.log(round);
             if(round == rounds + 1) {
-                console.log("GAME OVER");
-                console.log(showScore(wins, losses));
-                console.log(showWinner(wins, losses));
+                let scoreString = "GAME OVER! " + showWinner(wins, losses);
+                GUIShowScore(wins, losses, scoreString);
                 // reset data for new game
                 wins = 0;
                 losses = 0;
