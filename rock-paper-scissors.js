@@ -74,31 +74,68 @@ function showWinner (wins, losses) {
 }
 
 
-function playGame (numberOfRounds) {
-    let rounds = 0;
+function GUIShowRoundResult (roundResult) {
+    const resultString = showRoundResult(roundResult);
+    const resultPar = document.createElement("p");
+    resultPar.textContent = resultString;
+    resultPar.setAttribute("id", "currentResult");
+    const resultDiv = document.getElementById("result");
+    let removePar = document.getElementById("currentResult");
+    if (removePar) {
+        resultDiv.removeChild(removePar);
+    };
+    resultDiv.appendChild(resultPar);
+}
+
+
+function GUIShowScore (wins, losses) {
+    const scoreString = showScore(wins, losses);
+    const scoreH2 = document.createElement("H2");
+    scoreH2.textContent = scoreString;
+    scoreH2.setAttribute("id", "currentScore");
+    const scoreDiv = document.getElementById("score");
+    let removeH2 = document.getElementById("currentScore");
+    if (removeH2) {
+        scoreDiv.removeChild(removeH2);
+    };
+    scoreDiv.appendChild(scoreH2);
+}
+
+function GUIPlayGame (rounds) {
     let wins = 0;
     let losses = 0;
-    while (rounds < numberOfRounds) {
-        // TODO gui
-        let input = window.prompt("Enter number: ");
-        // convert input to integer
-        input = input * 1;
-        let roundResult = playRound(input, getComputerChoice());
-        // TODO gui
-        console.log(showRoundResult(roundResult));
-        if (roundResult[0] == WIN) wins++;
-        else if (roundResult[0] == LOSE) losses++;
-        // TODO gui
-        console.log(showScore(wins, losses));
-        rounds++;
-    }
-    // TODO gui
-    console.log("GAME OVER");
-    console.log(showScore(wins, losses));
-    console.log(showWinner(wins, losses));
-    console.log("Try again! CLik Play game");
+    let round = 0;
+    const buttons = document.querySelectorAll('button.game_button');
+    buttons.forEach(button => button.addEventListener(
+        'click',
+        function (e) {
+            // get input from button id
+            let input = e.target.id;
+            // convert input to integer
+            input = input * 1;
+            let roundResult = playRound(input, getComputerChoice());
+            GUIShowRoundResult(roundResult);
+            if (roundResult[0] == WIN) wins++;
+            else if (roundResult[0] == LOSE) losses++;
+            // TODO gui
+            GUIShowScore(wins, losses);
+            round++;
+            console.log(round);
+            if(round == rounds + 1) {
+                console.log("GAME OVER");
+                console.log(showScore(wins, losses));
+                console.log(showWinner(wins, losses));
+                // reset data for new game
+                wins = 0;
+                losses = 0;
+                round = 0;
+                ;
+            }
+    }));
 }
+
 
 // Play
 
-playGame(5);
+
+GUIPlayGame(5);
